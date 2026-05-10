@@ -2,6 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Cola from './pages/Cola';
+import Zonas from './pages/Zonas';
+import Usuarios from './pages/Usuarios';
+import Configuracion from './pages/Configuracion';
+import Estadisticas from './pages/Estadisticas';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -21,9 +25,31 @@ function App() {
               <Cola />
             </ProtectedRoute>
           } />
-        </Routes>
+          <Route path="/zonas" element={
+            <ProtectedRoute>
+              <Zonas />
+            </ProtectedRoute>
+          } />
+          <Route path="/usuarios" element={
+            <ProtectedRoute>
+              <Usuarios />
+            </ProtectedRoute>
+          } />
+          <Route path="/configuracion" element={
+            <ProtectedRoute>
+              <Configuracion />
+            </ProtectedRoute>
+          } />
+        <Route path="/estadisticas" element={
+          <ProtectedRoute>
+             <Estadisticas />
+            </ProtectedRoute>
+          } />
+           </Routes>
       </BrowserRouter>
     </AuthProvider>
+
+    
   );
 }
 
