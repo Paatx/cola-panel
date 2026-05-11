@@ -4,7 +4,6 @@ import api from '../services/api';
 import Sidebar from '../components/Sidebar';
 
 export default function Estadisticas() {
-  const { user, logout } = useAuth();
   const [stats, setStats] = useState({
     total: 0,
     esperando: 0,
@@ -44,105 +43,96 @@ export default function Estadisticas() {
   ];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
+  <Layout>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '28px' }}>
+      <div>
+        <h1 style={{ fontSize: '28px', fontWeight: '700', margin: 0 }}>Estadísticas</h1>
+        <p style={{ color: '#71717a', marginTop: '4px', fontSize: '14px' }}>Rendimiento de la gestión de la cola</p>
+      </div>
+      <select style={{ padding: '10px 12px', border: '1px solid #d4d4d8', borderRadius: '6px', fontSize: '14px' }}>
+        <option>Hoy</option>
+        <option>Esta semana</option>
+        <option>Último mes</option>
+      </select>
+    </div>
 
-     <Sidebar />
-
-      {/* MAIN */}
-      <main style={{ padding: '32px 40px', background: '#fafafa' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '28px' }}>
-          <div>
-            <h1 style={{ fontSize: '28px', fontWeight: '700', margin: 0 }}>Estadísticas</h1>
-            <p style={{ color: '#71717a', marginTop: '4px', fontSize: '14px' }}>Rendimiento de la gestión de la cola</p>
-          </div>
-          <select style={{ padding: '10px 12px', border: '1px solid #d4d4d8', borderRadius: '6px', fontSize: '14px' }}>
-            <option>Hoy</option>
-            <option>Esta semana</option>
-            <option selected>Último mes</option>
-          </select>
+    {loading ? (
+      <div style={{ textAlign: 'center', padding: '40px', color: '#71717a' }}>Cargando estadísticas...</div>
+    ) : (
+      <>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
+          {statCards.map((stat, i) => (
+            <div key={i} style={{ background: 'white', border: '1px solid #e4e4e7', borderRadius: '10px', padding: '18px 20px' }}>
+              <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.06em', color: '#71717a', fontWeight: '600' }}>{stat.label}</div>
+              <div style={{ fontSize: '28px', fontWeight: '700', marginTop: '6px' }}>{stat.value}</div>
+              {stat.trend && <div style={{ fontSize: '12px', color: stat.color, marginTop: '4px' }}>{stat.trend}</div>}
+            </div>
+          ))}
         </div>
 
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#71717a' }}>Cargando estadísticas...</div>
-        ) : (
-          <>
-            {/* STATS */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
-              {statCards.map((stat, i) => (
-                <div key={i} style={{ background: 'white', border: '1px solid #e4e4e7', borderRadius: '10px', padding: '18px 20px' }}>
-                  <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '.06em', color: '#71717a', fontWeight: '600' }}>{stat.label}</div>
-                  <div style={{ fontSize: '28px', fontWeight: '700', marginTop: '6px' }}>{stat.value}</div>
-                  {stat.trend && <div style={{ fontSize: '12px', color: stat.color, marginTop: '4px' }}>{stat.trend}</div>}
-                </div>
-              ))}
-            </div>
+        <div style={{ background: 'white', border: '1px solid #e4e4e7', borderRadius: '10px', padding: '20px', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <h2 style={{ fontSize: '15px', fontWeight: '600', margin: 0 }}>Personas atendidas por día</h2>
+            <span style={{ fontSize: '13px', color: '#71717a' }}>Últimos 30 días</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(30, 1fr)', gap: '4px', height: '160px', alignItems: 'end' }}>
+            {[30,45,60,40,70,85,95,35,50,55,65,48,88,92,42,58,62,70,52,82,90,38,55,60,68,45,85,94,40,50].map((h, i) => (
+              <div key={i} style={{
+                background: [5,6,12,13,19,20,26,27].includes(i) ? '#ea580c' : '#fff7ed',
+                border: '1px solid #ea580c',
+                height: `${h}%`,
+                borderRadius: '4px 4px 0 0'
+              }}></div>
+            ))}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(30, 1fr)', gap: '4px', marginTop: '8px', fontSize: '11px', color: '#71717a', textAlign: 'center' }}>
+            {Array.from({length: 30}, (_, i) => (
+              <span key={i}>{[0,4,9,14,19,24,29].includes(i) ? i+1 : ''}</span>
+            ))}
+          </div>
+          <div style={{ display: 'flex', gap: '20px', marginTop: '16px', fontSize: '12px', color: '#71717a' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '12px', height: '12px', background: '#fff7ed', border: '1px solid #ea580c', borderRadius: '3px', display: 'inline-block' }}></span>
+              Lunes a viernes
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '12px', height: '12px', background: '#ea580c', borderRadius: '3px', display: 'inline-block' }}></span>
+              Fines de semana
+            </span>
+          </div>
+        </div>
 
-            {/* GRÁFICA */}
-            <div style={{ background: 'white', border: '1px solid #e4e4e7', borderRadius: '10px', padding: '20px', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-                <h2 style={{ fontSize: '15px', fontWeight: '600', margin: 0 }}>Personas atendidas por día</h2>
-                <span style={{ fontSize: '13px', color: '#71717a' }}>Últimos 30 días</span>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(30, 1fr)', gap: '4px', height: '160px', alignItems: 'end' }}>
-                {[30,45,60,40,70,85,95,35,50,55,65,48,88,92,42,58,62,70,52,82,90,38,55,60,68,45,85,94,40,50].map((h, i) => (
-                  <div key={i} style={{
-                    background: [5,6,12,13,19,20,26,27].includes(i) ? '#ea580c' : '#fff7ed',
-                    border: '1px solid #ea580c',
-                    height: `${h}%`,
-                    borderRadius: '4px 4px 0 0'
-                  }}></div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div style={{ background: 'white', border: '1px solid #e4e4e7', borderRadius: '10px', overflow: 'hidden' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e4e4e7', fontWeight: '600', fontSize: '15px' }}>Horas punta</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <tbody>
+                {[['21:00 — 22:00', '28%'], ['14:00 — 15:00', '22%'], ['22:00 — 23:00', '18%'], ['13:00 — 14:00', '14%'], ['Otros', '18%']].map(([hora, pct], i) => (
+                  <tr key={i} style={{ borderBottom: i < 4 ? '1px solid #e4e4e7' : 'none' }}>
+                    <td style={{ padding: '14px 20px' }}>{hora}</td>
+                    <td style={{ padding: '14px 20px', textAlign: 'right', fontWeight: '600' }}>{pct}</td>
+                  </tr>
                 ))}
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(30, 1fr)', gap: '4px', marginTop: '8px', fontSize: '11px', color: '#71717a', textAlign: 'center' }}>
-                {Array.from({length: 30}, (_, i) => (
-                  <span key={i}>{[0,4,9,14,19,24,29].includes(i) ? i+1 : ''}</span>
+              </tbody>
+            </table>
+          </div>
+
+          <div style={{ background: 'white', border: '1px solid #e4e4e7', borderRadius: '10px', overflow: 'hidden' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e4e4e7', fontWeight: '600', fontSize: '15px' }}>Zonas más solicitadas</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <tbody>
+                {[['🌿 Terraza', '58%'], ['🪑 Interior', '27%'], ['Sin preferencia', '15%']].map(([zona, pct], i, arr) => (
+                  <tr key={i} style={{ borderBottom: i < arr.length - 1 ? '1px solid #e4e4e7' : 'none' }}>
+                    <td style={{ padding: '14px 20px' }}>{zona}</td>
+                    <td style={{ padding: '14px 20px', textAlign: 'right', fontWeight: '600' }}>{pct}</td>
+                  </tr>
                 ))}
-              </div>
-              <div style={{ display: 'flex', gap: '20px', marginTop: '16px', fontSize: '12px', color: '#71717a' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '12px', height: '12px', background: '#fff7ed', border: '1px solid #ea580c', borderRadius: '3px', display: 'inline-block' }}></span>
-                  Lunes a viernes
-                </span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '12px', height: '12px', background: '#ea580c', borderRadius: '3px', display: 'inline-block' }}></span>
-                  Fines de semana
-                </span>
-              </div>
-            </div>
-
-            {/* TABLAS */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-              <div style={{ background: 'white', border: '1px solid #e4e4e7', borderRadius: '10px', overflow: 'hidden' }}>
-                <div style={{ padding: '16px 20px', borderBottom: '1px solid #e4e4e7', fontWeight: '600', fontSize: '15px' }}>Horas punta</div>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <tbody>
-                    {[['21:00 — 22:00', '28%'], ['14:00 — 15:00', '22%'], ['22:00 — 23:00', '18%'], ['13:00 — 14:00', '14%'], ['Otros', '18%']].map(([hora, pct], i) => (
-                      <tr key={i} style={{ borderBottom: i < 4 ? '1px solid #e4e4e7' : 'none' }}>
-                        <td style={{ padding: '14px 20px' }}>{hora}</td>
-                        <td style={{ padding: '14px 20px', textAlign: 'right', fontWeight: '600' }}>{pct}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div style={{ background: 'white', border: '1px solid #e4e4e7', borderRadius: '10px', overflow: 'hidden' }}>
-                <div style={{ padding: '16px 20px', borderBottom: '1px solid #e4e4e7', fontWeight: '600', fontSize: '15px' }}>Zonas más solicitadas</div>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <tbody>
-                    {[['🌿 Terraza', '58%'], ['🪑 Interior', '27%'], ['Sin preferencia', '15%']].map(([zona, pct], i, arr) => (
-                      <tr key={i} style={{ borderBottom: i < arr.length - 1 ? '1px solid #e4e4e7' : 'none' }}>
-                        <td style={{ padding: '14px 20px' }}>{zona}</td>
-                        <td style={{ padding: '14px 20px', textAlign: 'right', fontWeight: '600' }}>{pct}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </>
-        )}
-      </main>
-    </div>
-  );
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </>
+    )}
+  </Layout>
+);
 }
